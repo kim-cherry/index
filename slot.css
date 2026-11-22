@@ -1,0 +1,347 @@
+/* ==========================================================
+   INDEX 슬롯 카드 — 공용 디자인
+   홈페이지(index.html)와 카드뽑기 폴더(card-export.html)가 같이 씀.
+   카드 디자인을 고치려면 이 파일만 고치면 됨.
+   ========================================================== */
+:root {
+  --paper: #eeeae3;
+  --paper-hi: #f7f4ee;
+  --ink: #17151a;
+  --ink-2: #47414a;
+  --ink-3: #8b847d;
+  --line: rgba(23, 21, 26, 0.14);
+  --grid: rgba(23, 21, 26, 0.055);
+  --display: 'Anton', 'Black Han Sans', sans-serif;
+  --kr: 'Black Han Sans', 'Pretendard', sans-serif;
+  --mono: 'JetBrains Mono', 'Pretendard', monospace;
+  --serif: 'Noto Serif KR', serif;
+  --sans: 'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+}
+.barcode {
+  background: repeating-linear-gradient(90deg, currentColor 0 2px, transparent 2px 4px, currentColor 4px 5px, transparent 5px 7px, currentColor 7px 10px, transparent 10px 12px, currentColor 12px 13px, transparent 13px 16px);
+}
+.slot, .slot * { box-sizing: border-box; }
+.slot p, .slot h3, .slot figure, .slot ul { margin: 0; }
+.slot ul { padding: 0; list-style: none; }
+.slot { text-decoration: none; }
+
+/* =========================================================
+   SLOT — 고정 슬롯 카드 (9:16). 내부 단위는 전부 cqw라
+   카드 폭만 바꾸면 비율 그대로 커지고 작아짐.
+   ========================================================= */
+.slot {
+  container-type: inline-size;
+  position: relative;
+  display: block;
+  color: var(--ink);
+  --ac: #888;
+  --ac2: #222;
+  --ac2-ink: #fff;
+}
+.slot-inner { position: relative; padding-top: 6.5cqw; }
+
+/* 인덱스 탭 — 번호마다 위치가 계단처럼 밀려서, 나란히 두면 진짜 색인 카드처럼 보임 */
+.slot-tab {
+  position: absolute;
+  top: 0;
+  left: var(--tab-x, 5cqw);
+  width: 21cqw;
+  height: 7.2cqw;
+  background: var(--ac);
+  color: var(--paper-hi);
+  clip-path: polygon(10% 0, 90% 0, 100% 100%, 0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6cqw;
+  font-family: var(--display);
+  font-size: 3.6cqw;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  padding-top: 0.4cqw;
+  transition: transform 0.25s ease;
+  z-index: 0;
+}
+.slot-tab small { font-size: 2.4cqw; opacity: 0.8; }
+
+.slot-paper {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  background-color: var(--paper-hi);
+  background-image:
+    radial-gradient(120% 70% at 50% 108%, color-mix(in srgb, var(--ac) 30%, transparent), transparent 70%),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 100% 100%, 5cqw 5cqw, 5cqw 5cqw;
+  border-top: 0.9cqw solid var(--ac);
+  box-shadow: 0 1px 0 var(--line), 0 18px 40px -22px rgba(23, 21, 26, 0.45);
+  z-index: 1;
+}
+
+.slot-meta {
+  position: absolute;
+  top: 3.4cqw;
+  left: 5cqw;
+  right: 5cqw;
+  display: flex;
+  align-items: center;
+  gap: 2cqw;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 2.3cqw;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  z-index: 6;
+  line-height: 1;
+}
+.slot-meta b { color: var(--ink); font-weight: 800; }
+.slot-meta i { flex: 1; border-top: 0.35cqw dotted var(--ac); opacity: 0.7; }
+
+/* 거대 영문 이름 */
+.slot-en {
+  position: absolute;
+  top: 7.5cqw;
+  left: 3.5cqw;
+  font-family: var(--display);
+  font-size: var(--en, 46cqw);
+  line-height: 0.92;
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+.slot-en.fill { color: var(--ac); z-index: 2; }
+.slot-en.line { color: transparent; -webkit-text-stroke: 0.35cqw var(--paper-hi); z-index: 4; }
+
+/* 인물 */
+.slot-art { position: absolute; z-index: 3; pointer-events: none; }
+.slot-art img { display: block; width: 100%; height: 100%; }
+/* (A) 배경 있는 일러 — 프레임에 꽉 채우고 아래로 페이드 */
+.slot-art.framed { top: 13cqw; left: 0; right: 0; height: 118cqw; }
+.slot-art.framed img {
+  object-fit: cover;
+  -webkit-mask-image: linear-gradient(#000 62%, transparent 98%);
+          mask-image: linear-gradient(#000 62%, transparent 98%);
+}
+.slot-art.blend img { mix-blend-mode: multiply; }
+/* (B) 배경 투명 PNG — 인물이 영문 이름 앞으로, 발끝은 하단 띠 위까지 */
+.slot-art.cutout { top: 5cqw; left: -4cqw; right: -4cqw; bottom: 10cqw; }
+.slot-art.cutout img {
+  object-fit: contain;
+  object-position: var(--pos, 50% 100%);
+  transform: scale(var(--sc, 1));
+  transform-origin: 50% 100%;
+  filter: drop-shadow(0 1.5cqw 2.5cqw rgba(23, 21, 26, 0.18));
+}
+
+.slot-side {
+  position: absolute;
+  top: 20cqw;
+  right: 2.4cqw;
+  writing-mode: vertical-rl;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 2cqw;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  z-index: 6;
+  line-height: 1;
+  white-space: nowrap;
+}
+.slot-side b { color: var(--ac); font-weight: 800; }
+
+.slot-new {
+  position: absolute;
+  top: 7cqw;
+  right: 6cqw;
+  z-index: 7;
+  background: var(--ac2);
+  color: var(--ac2-ink);
+  font-family: var(--display);
+  font-size: 4.4cqw;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  padding: 1.1cqw 2cqw 0.9cqw 2.4cqw;
+  transform: rotate(7deg);
+  box-shadow: 0 1cqw 2.4cqw rgba(23, 21, 26, 0.22);
+}
+
+/* 하단 정보 */
+.slot-info {
+  position: absolute;
+  left: 5.5cqw;
+  right: 30cqw;
+  bottom: 13cqw;
+  z-index: 6;
+}
+.slot-kind {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--paper-hi);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 2.3cqw;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  padding: 1cqw 1.6cqw 0.9cqw;
+}
+.slot-ko {
+  font-family: var(--kr);
+  font-weight: 400;
+  font-size: 19cqw;
+  line-height: 1.02;
+  color: var(--ac);
+  margin-top: 1.4cqw;
+  white-space: nowrap;
+  text-shadow:
+    0.5cqw 0 0 var(--paper-hi), -0.5cqw 0 0 var(--paper-hi),
+    0 0.5cqw 0 var(--paper-hi), 0 -0.5cqw 0 var(--paper-hi),
+    0.35cqw 0.35cqw 0 var(--paper-hi), -0.35cqw -0.35cqw 0 var(--paper-hi),
+    0.35cqw -0.35cqw 0 var(--paper-hi), -0.35cqw 0.35cqw 0 var(--paper-hi);
+}
+.slot-epi {
+  font-family: var(--kr);
+  font-weight: 400;
+  font-size: 4.6cqw;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-top: 0.6cqw;
+  white-space: nowrap;
+  text-shadow: 0 0 1.2cqw var(--paper-hi), 0 0 0.6cqw var(--paper-hi);
+}
+.slot-chips { display: flex; gap: 1.2cqw; margin-top: 3cqw; }
+.slot-chips li {
+  width: 13cqw;
+  height: 13cqw;
+  background: var(--ink);
+  color: var(--paper-hi);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.4cqw 1.2cqw 1.3cqw;
+}
+.slot-chips small {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1.6cqw;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  opacity: 0.6;
+}
+.slot-chips span {
+  font-family: var(--kr);
+  font-size: 3.7cqw;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* 로고 도장 자리 */
+.slot-stamp {
+  position: absolute;
+  right: 4.5cqw;
+  bottom: 13cqw;
+  width: 23cqw;
+  height: 23cqw;
+  z-index: 6;
+  transform: rotate(-11deg);
+  color: var(--ac);
+  mix-blend-mode: multiply;
+  opacity: 0.9;
+}
+.slot-stamp svg, .slot-stamp img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.slot-stamp.is-logo { width: 25cqw; height: 25cqw; right: 3.5cqw; bottom: 12.5cqw; opacity: 0.88; }
+.slot-stamp.is-logo svg { overflow: visible; }
+
+/* 하단 띠 */
+.slot-band { position: absolute; left: 0; right: 0; bottom: 0; height: 10cqw; z-index: 6; }
+.band-run {
+  height: 5.2cqw;
+  background: var(--ac);
+  color: var(--paper-hi);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.band-run div {
+  display: flex;
+  white-space: nowrap;
+  font-family: var(--display);
+  font-size: 3cqw;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  animation: run 22s linear infinite;
+}
+.band-run span { padding-right: 3cqw; }
+.band-cta {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  color: var(--paper-hi);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6cqw;
+  font-family: var(--display);
+  font-size: 3.2cqw;
+  letter-spacing: 0.16em;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.band-file {
+  height: 4.8cqw;
+  background: var(--ink);
+  color: var(--paper-hi);
+  display: flex;
+  align-items: center;
+  gap: 2.4cqw;
+  padding: 0 4cqw;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1.8cqw;
+  letter-spacing: 0.14em;
+  line-height: 1;
+}
+.band-file .barcode { flex: 1; height: 2.2cqw; opacity: 0.75; }
+@keyframes run { to { transform: translateX(-50%); } }
+
+/* 비어 있는 다음 슬롯 */
+.slot.sealed .slot-paper {
+  background-image:
+    repeating-linear-gradient(-45deg, rgba(23,21,26,0.05) 0 1.2cqw, transparent 1.2cqw 3cqw),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 100% 100%, 5cqw 5cqw, 5cqw 5cqw;
+}
+.sealed-mark {
+  position: absolute;
+  left: 50%;
+  top: 58cqw;
+  transform: translate(-50%, -50%);
+  font-family: var(--display);
+  font-size: 70cqw;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 0.5cqw rgba(23, 21, 26, 0.18);
+  z-index: 3;
+}
+.redact { display: inline-block; background: var(--ink); height: 0.9em; vertical-align: -0.08em; }
+.slot.sealed .slot-ko { color: var(--ink-3); }
+
+/* 로스터에서의 인터랙션 */
+a.slot { cursor: pointer; transition: transform 0.25s ease; }
+a.slot:hover, a.slot:focus-visible { transform: translateY(-1.6cqw); outline: none; }
+a.slot:hover .slot-tab, a.slot:focus-visible .slot-tab { transform: translateY(-1.2cqw); }
+a.slot:hover .band-cta, a.slot:focus-visible .band-cta { opacity: 1; }
+a.slot:focus-visible .slot-paper { outline: 3px solid var(--ac); outline-offset: 4px; }
+
+/* PNG 추출용 — 그림자·움직임 끔 */
+.slot.export .slot-paper { box-shadow: none; }
+.slot.export .band-run div { animation: none; transform: translateX(-12%); }
+.slot.export .slot-tab { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  .band-run div { animation: none; }
+}
