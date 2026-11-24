@@ -237,6 +237,22 @@
   .rec-chip em { font-style: normal; margin-left: auto; font-family: var(--display); }
   .type-note { margin-top: 12px; font-size: 13px; color: var(--ink-3); }
 
+  /* 기록 번호 읽는 법 */
+  .fcode { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: stretch; }
+  .fcode-ex { display: flex; align-items: flex-start; justify-content: center; gap: 6px; padding: 26px 20px 22px; background: var(--paper-hi); border: 1.5px solid var(--ink); }
+  .fcode-ex .part { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .fcode-ex .part b { font-family: var(--display); font-weight: 400; font-size: clamp(34px, 4.2vw, 56px); line-height: 1; color: var(--ink); padding: 6px 10px 4px; border-bottom: 3px solid var(--house); }
+  .fcode-ex .part span { font-size: 10.5px; color: var(--ink-3); white-space: nowrap; }
+  .fcode-ex .dash { font-family: var(--display); font-size: clamp(28px, 3.4vw, 44px); line-height: 1.15; color: var(--ink-3); }
+  .fcode-grades { display: grid; gap: 14px; }
+  .grade { background: var(--paper-hi); border: 1.5px solid var(--ink); padding: 14px 18px 14px; }
+  .grade h5 { margin: 0; display: flex; align-items: baseline; gap: 8px; font-family: var(--kr); font-weight: 400; font-size: 19px; color: var(--ink); }
+  .grade h5 small { font-family: var(--mono); font-weight: 800; font-size: 10px; letter-spacing: 0.12em; color: var(--house); }
+  .grade ul { display: flex; gap: 4px; margin-top: 8px; }
+  .grade li { width: 30px; height: 30px; display: grid; place-items: center; background: var(--ink); color: var(--paper-hi); font-family: var(--display); font-size: 17px; line-height: 1; }
+  .grade p { margin-top: 8px; font-size: 13.5px; line-height: 1.6; }
+  @media (max-width: 960px) { .fcode { grid-template-columns: 1fr; } }
+
   /* ALEPH — 최고 기밀 분류 */
   .types-bar button.secret {
     margin-left: auto;
@@ -714,6 +730,9 @@
       <p class="type-note">※ 분류는 행정 편의를 위한 것으로, 능력이나 위험도를 직접 나타내지 않는다.</p>
     </div>
 
+    <div class="sub-h rv"><b>FILE NO.</b><span>기록 번호 읽는 법</span><i></i></div>
+    <div class="fcode rv" id="fcode"></div>
+
     <div class="sub-h rv"><b>TETHER</b><span>담당자 제도</span><i></i><small class="mono">SAFETY TETHER</small></div>
     <div class="tether rv">
       <div class="pass" aria-label="INDEX 테더 출입증 예시">
@@ -841,7 +860,7 @@
 <script src="slot.js"></script>
 <script>
 (() => {
-  const { ENTRIES, NEWEST, LOGO, render, sealed, vars, pad, esc, kindEn } = window.IndexSlot;
+  const { ENTRIES, NEWEST, LATEST, LOGO, render, sealed, vars, pad, esc, kindEn } = window.IndexSlot;
   const W = window.INDEX_WORLD;
   const $ = id => document.getElementById(id);
   const HQ = Object.fromEntries(W.hq.map((h, i) => [h.code, { ...h, i }]));
@@ -855,7 +874,7 @@
     + `<span class="word">INDEX<span>-KR</span></span><small class="mono">국제특수개체<br>통합관리국</small>`;
 
   /* ---------- HERO ---------- */
-  const latest = ENTRIES.find(e => e.no === NEWEST);
+  const latest = LATEST;
   if (latest) {
     const hc = $('heroCard');
     hc.href = '#/' + latest.id;
@@ -897,6 +916,15 @@
   }
   typesBar.addEventListener('click', ev => { const b = ev.target.closest('button'); if (b) showType(+b.dataset.i); });
   showType(Math.max(0, W.types.findIndex(t => ENTRIES.some(e => e.type === t.ko))));
+
+  /* ---------- 01 기록 번호 읽는 법 ---------- */
+  const FC = W.fileCode;
+  if (FC) {
+    $('fcode').innerHTML = `
+      <div class="fcode-ex" aria-label="${esc(FC.example)}">${FC.parts.map(([v, l]) => `<div class="part"><b>${esc(v)}</b><span class="mono">${esc(l)}</span></div>`).join('<span class="dash" aria-hidden="true">-</span>')}</div>
+      <div class="fcode-grades">${FC.grades.map(g => `
+        <div class="grade"><h5>${esc(g.name)}<small>${esc(g.en)}</small></h5><ul>${g.scale.map(s => `<li>${esc(s)}</li>`).join('')}</ul><p>${esc(g.text)}</p></div>`).join('')}</div>`;
+  }
 
   /* ---------- 02 기관 ---------- */
   $('seal').innerHTML = (LOGOS.red || LOGO)

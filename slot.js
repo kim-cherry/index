@@ -7,6 +7,8 @@
   const ENTRIES = (window.INDEX_ENTRIES || []).slice().sort((a, b) => a.no - b.no);
   const LOGO = window.INDEX_LOGO || '';
   const NEWEST = Math.max(0, ...ENTRIES.map(e => e.no));
+  // NEW 스티커·첫 화면 카드에 쓸 최신 기록: latest: true 가 붙은 캐릭터, 없으면 번호가 가장 큰 캐릭터
+  const LATEST = ENTRIES.find(e => e.latest) || ENTRIES.find(e => e.no === NEWEST);
   const pad = n => String(n).padStart(3, '0');
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   let uid = 0;
@@ -71,7 +73,7 @@
     const en = e.en.toUpperCase();
     const enSize = Math.min(46, 190 / Math.max(en.length, 1));
     const chips = (e.chips || []).slice(0, 3).map(([k, v]) => `<li><small>${esc(k)}</small><span>${esc(v)}</span></li>`).join('');
-    const isNew = opts.isNew ?? (opts.link && e.no === NEWEST);
+    const isNew = opts.isNew ?? (opts.link && e === LATEST);
     return `<${tag} class="slot${opts.cls ? ' ' + opts.cls : ''}" data-kind="${esc(e.kind)}" data-id="${esc(e.id)}"${href} style="${vars(e)}--tab-x:${tabX(e.no)}cqw;--en:${enSize}cqw" aria-label="No.${pad(e.no)} ${esc(e.ko)}">
       <div class="slot-inner">
         <div class="slot-tab"><small>No.</small>${pad(e.no)}</div>
@@ -118,5 +120,5 @@
     </div>`;
   }
 
-  window.IndexSlot = { ENTRIES, NEWEST, LOGO, render, sealed, vars, pad, esc, kindEn, inkOn };
+  window.IndexSlot = { ENTRIES, NEWEST, LATEST, LOGO, render, sealed, vars, pad, esc, kindEn, inkOn };
 })();

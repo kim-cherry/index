@@ -18,6 +18,21 @@ window.INDEX_WORLD = {
     { no: 'A', code: 'ALEPH', ko: '알레프', en: 'ALEPH', secret: true, text: 'INDEX 내부의 최상위 특수기록 프로토콜에 부여된 별도의 분류명칭. INDEX의 최고 기밀로, 일반 직원은 접근할 수 없다.' }
   ],
 
+  /* 기록 번호 읽는 법 — 세계관 섹션 분류표 아래에 표시 */
+  fileCode: {
+    example: 'EX-26-1016-L',
+    parts: [
+      ['EX', '분류 코드'],
+      ['26', '등록 연도'],
+      ['1016', '일련번호'],
+      ['L', '등급']
+    ],
+    grades: [
+      { name: '전력 등급', en: 'POWER', scale: ['S', 'A', 'B', 'C', 'D', 'E', 'F'], text: '원래 인간이며 인류 편에서 싸우는 요원·협력자. 행정용 등급.' },
+      { name: '위험 등급', en: 'RISK', scale: ['H', 'M', 'L'], text: '균열을 넘어와 인류의 편도, 적도 될 수 있는 개체.' }
+    ]
+  },
+
   missions: [
     { ko: '조사 · 분류', en: 'INVESTIGATE', text: '신규 개체의 신원, 특성, 능력 및 위험성 파악', hq: ['REC', 'INV'] },
     { ko: '보호 · 지원', en: 'PROTECT', text: '개체의 안전 보장, 주거·의료·사회적응 지원', hq: ['PRT', 'MED'] },

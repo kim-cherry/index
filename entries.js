@@ -11,8 +11,12 @@
               blend = true면 종이와 곱하기 합성 (흰 배경 일러에 추천)
               cutout= true면 배경 투명 PNG → 영문 이름 위로 인물이 올라옴
               scale = cutout 인물 크기 배율 (기본 1)
-   file     : 기록 번호. 앞자리는 분류 코드 (AW 발현 · MT 변이 · RT 귀환 · EX 이종
-              · CT 계약 · MF 현현 · UC 미분류 · ALEPH)
+   file     : 기록 번호 = 분류코드-등록연도-일련번호-등급  (예: EX-26-1016-L)
+              분류코드 AW 발현 · MT 변이 · RT 귀환 · EX 이종 · CT 계약 · MF 현현 · UC 미분류 · ALEPH
+              등급     인간 출신 + 인류 편 요원 → 전력 등급 S·A·B·C·D·E·F
+                       균열을 넘어온 개체      → 위험 등급 H·M·L
+              (규칙 설명은 world.js 의 fileCode 에 있고 세계관 섹션에 표시됨)
+   latest   : true 를 붙인 캐릭터가 NEW 스티커 + 첫 화면 카드 (없으면 번호가 가장 큰 캐릭터)
    links.chat : { unsafety: '주소', safety: '주소' } → 대화하기 누르면 둘 중 선택 팝업
                 ('#'이면 "링크 준비 중"으로 비활성). 주소 하나만 문자열로 넣으면 팝업 없이 바로 이동
    ========================================================== */
@@ -77,6 +81,7 @@ window.INDEX_ENTRIES = [
     no: 2,
     file: 'AW-14-0001-S',
     registered: '2026.11.19',
+    latest: true,                // 세 캐릭터 동시 공개 — 최신 기록은 레테로 고정
     kind: 'personnel',
     kindLabel: 'INDEX 특수작전본부 요원',
     type: '발현형',
@@ -118,6 +123,56 @@ window.INDEX_ENTRIES = [
     quote: '기어오르지 마, 자기야. 원래 내 앞에서는 무릎 꿇는 게 예의거든.',
     quoteNote: 'LOW · HUSKY · NEVER SORRY',
     tags: ['S급', '중력 지배', '골초', '시말서 산더미', '비아냥 플러팅', '전투광의 공허'],
+    links: { chat: { unsafety: '#', safety: '#' } }
+  },
+  {
+    id: 'mokseo',
+    no: 3,
+    file: 'EX-26-1016-L',          // 1016 = 금목서 탄생화 날짜(목서 생일). 공개 등록 기준: 이종형 · 위험 L (진짜 정체는 secret)
+    registered: '2026.11.24',
+    kind: 'subject',
+    kindLabel: 'INDEX 관리대상',
+    type: '이종형',
+    genre: '동양풍 · 로맨스',
+    dept: null,
+    ko: '금목서',
+    en: 'MOKSEO',
+    epithet: '해어화 · 말을 이해하는 꽃',
+    hook: '판정 위험도 최하 · 무해한 평화주의자.',
+    accent: '#3f7a55',
+    accent2: '#ef8a2a',
+    chips: [['TYPE', '이종형'], ['THREAT', '최하'], ['ALIAS', '해어화']],
+    art: [
+      { src: 'img/mokseo-1.webp', pos: '50% 22%', blend: true, label: '미소' },
+      { src: 'img/mokseo-2.webp', pos: '50% 22%', blend: true, label: '비단 도포' },
+      { src: 'img/mokseo-3.webp', pos: '50% 22%', blend: true, label: '바람' },
+      { src: 'img/mokseo-4.webp', pos: '55% 28%', blend: true, label: '옆모습' },
+      { src: 'img/mokseo-5.webp', pos: '40% 30%', blend: true, label: '내리깐 눈' },
+      { src: 'img/mokseo-6.webp', pos: '55% 28%', blend: true, label: '기울임' },
+      { src: 'img/mokseo-7.webp', pos: '50% 25%', blend: true, label: '정면' }
+    ],
+    spec: [
+      ['분류', '이종형 · 남성'],
+      ['위험도', '최하 · 무해'],
+      ['신장', '178cm'],
+      ['추정 나이', '약 23세'],
+      ['출신', '동양풍 이차원 제국 · 기방'],
+      ['담당', '테더(유저) · 호칭 「주인님」']
+    ],
+    profile:
+      '비단처럼 흐르는 긴 주황빛 머리, 차분한 초록빛 눈동자, 긴 속눈썹. 이세계 제국 최고급 기방에서 \'해어화\'라 불리던 가장 인기 있는 남기(男妓)로, 다도·언어·시·노래·가무에 특출나다. 이름은 옛 주인이 지어준 것 — 방 안의 주인은 될 수 없는, 마당의 관상용 꽃이라는 뜻이 숨어 있다.',
+    ability: {
+      name: '금목서 향 (등록 능력)',
+      desc: '손끝이 닿은 물로 최상급의 차를 우려내고, 몸에서 나는 금목서 향기로 타인의 정신적 피로와 살의를 잠재운다. 무해한 평화주의적 능력.',
+      list: ['최상급 차 우리기', '향기로 정신적 피로 완화', '향기로 살의 진정']
+    },
+    secret: {
+      title: '현현형 · S급 — 금목서 나무의 화신',
+      text: '감정을 완벽히 통제해 측정기에 잡히지 않는다. 유저가 심각한 위험에 처해 분노하면 본성이 개방되어, 아찔한 금목서 향과 함께 지면을 뚫고 거대한 나무뿌리를 불러 적을 꿰뚫고 포박한다. 목서 본인도 아직 모르는 힘.'
+    },
+    quote: '오늘의 손님들은 조금 거치시군요.',
+    quoteNote: '균열 너머, 총구 앞에서',
+    tags: ['해어화', '주인님', '금목서 향', '다도', '허밍', '나긋한 존댓말'],
     links: { chat: { unsafety: '#', safety: '#' } }
   }
 ];
