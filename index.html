@@ -546,6 +546,11 @@
   .dv-secret h5, .dv-secret p:not(.lab) { filter: blur(6px); transition: filter 0.4s ease; }
   .dv-secret.open h5, .dv-secret.open p:not(.lab) { filter: none; }
   .dv-secret.open { cursor: default; }
+  .dv-secret .reclass { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 14px; font-size: 13px; letter-spacing: 0.08em; }
+  .dv-secret .reclass span { font-size: 10px; color: rgba(255, 255, 255, 0.5); }
+  .dv-secret .reclass s { color: rgba(255, 255, 255, 0.45); }
+  .dv-secret .reclass em { font-style: normal; color: rgba(255, 255, 255, 0.45); }
+  .dv-secret .reclass b { color: #fff; border: 1.5px solid #e5484d; padding: 4px 8px 3px; }
   .dv-quote { position: relative; padding: 22px 0 0 64px; }
   .dv-quote::before { content: "\201C"; position: absolute; left: 0; top: -6px; font-family: var(--display); font-size: 110px; line-height: 1; color: var(--ac); }
   .dv-quote p { font-family: var(--serif); font-weight: 900; font-size: clamp(20px, 2.2vw, 27px); line-height: 1.55; color: var(--ink); }
@@ -1065,7 +1070,7 @@
           <dl class="dv-spec">${spec}</dl>
           ${e.profile ? sec('PROFILE', '프로필', `<p>${esc(e.profile)}</p>`) : ''}
           ${ab ? sec('ABILITY', '능력', `<div class="dv-ability"><h5>${esc(ab.name)}</h5><p>${esc(ab.desc)}</p>${ab.list?.length ? `<ol>${ab.list.map((t, k) => `<li><b>${two(k + 1)}</b><span>${esc(t)}</span></li>`).join('')}</ol>` : ''}</div>`) : ''}
-          ${e.secret ? sec('RESTRICTED', '열람 제한', `<div class="dv-secret" role="button" tabindex="0" aria-expanded="false"><p class="lab mono">INDEX 기록보안과 · Level 3<i></i><span data-hint>눌러서 열람</span></p><h5>${esc(e.secret.title)}</h5><p>${esc(e.secret.text)}</p></div>`) : ''}
+          ${e.secret ? sec('RESTRICTED', '열람 제한', `<div class="dv-secret" role="button" tabindex="0" aria-expanded="false"><p class="lab mono">INDEX 기록보안과 · Level 3<i></i><span data-hint>눌러서 열람</span></p>${e.secret.file ? `<p class="reclass mono"><span>재분류</span><s>${esc(e.file)}</s><em>→</em><b>${esc(e.secret.file)}</b></p>` : ''}<h5>${esc(e.secret.title)}</h5><p>${esc(e.secret.text)}</p></div>`) : ''}
           ${e.quote ? sec('VOICE', '대사', `<blockquote class="dv-quote"><p>${esc(e.quote)}</p>${e.quoteNote ? `<cite class="mono">— ${esc(e.quoteNote)}</cite>` : ''}</blockquote>`) : ''}
           ${e.tags?.length ? sec('KEYWORDS', '키워드', `<ul class="dv-tags">${e.tags.map(t => `<li>${esc(t)}</li>`).join('')}</ul>`) : ''}
           <div class="dv-cta">
